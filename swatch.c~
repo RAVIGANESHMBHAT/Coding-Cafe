@@ -1,0 +1,1965 @@
+#include<GL/glut.h>
+#define PI 3.142
+int l,d=0,scene;
+int mov_car=0,mov_waste=0,mov_sick_man=0,mov_man_throw_waste2=0,mov_man4=0,xx;
+float mov_man_and_waste=0,a,mov_waste_and_man=0,b;
+float x,y,z;
+int mov_vehicle2=0;
+void display();
+void keyEvent(int key);
+void keyEvent1(int key);
+void init();
+void road(GLfloat *a,GLfloat *b);
+void write_content(float a,float b,char *aa,char font);
+void write_content1(float a,float b,char *aa,char font);
+void write_content3(float a,float b,char *aa,char font);
+void hills();
+void circle();
+void plot(float x,float y);
+void drawRightHalfCircle();
+void home();
+void sick_man();
+void drawcircle(int a,int b);
+void man_in_car();
+void dustbin();
+void call_dustbin();
+void bench();
+void move_sick_man();
+void car();
+void waste_in_car();
+void move_car();
+void pond(float x,float y,float z);
+void board(GLfloat *a,GLfloat *b,GLfloat *c);
+void waste();
+void waste_with_man();
+void display_man_and_waste();
+void display_waste_and_man();
+void move_man_and_waste();
+void move_waste_and_man();
+void man_throw_waste();
+void carrot_waste();
+void bone();
+void tree();
+void cut_tree();
+void call_cut_tree();
+void draw_circle(GLint h, GLint k, GLint r);
+void plotpixels(GLint h,GLint k, GLint x,GLint y);
+void draw_pixel(GLint cx, GLint cy);
+void road_side_block(float a,float b,float c);
+void call_road_block(float a,float b,float c,float k,float l);
+void man_throw_waste();
+
+void intro();
+void thank_you();
+void after_months();
+void end();
+
+void road2();
+void busstand2();
+void vehicle2();
+void move_vehicle2();
+void man_throw_waste2();
+void move_man_throw_waste2();
+void school();
+void tree_school();
+void paddy_field();
+void draw_tree(int a,int b);
+void move_man_scene4();
+
+char font[]={"GLUT_BITMAP_8_BY_13,  GLUT_BITMAP_9_BY_15,  GLUT_BITMAP_TIMES_ROMAN_10,  GLUT_BITMAP_TIMES_ROMAN_24,GLUT_BITMAP_HELVETICA_10,  GLUT_BITMAP_HELVETICA_12,  GLUT_BITMAP_HELVETICA_18"};
+char use_me[]="Use Me";
+char dustbn[]="Dustbin";
+char dont_text[]="Don't throw",waste_text[]="waste into",the_text[]="the pond",waste1[]="Waste",iam_sick[]="Iam sick...";
+char stick_no[]="Stick no Bills";
+char clean[]="God gave us GREEN";
+char clean1[]="Let's keep it CLEAN";
+char next_scene1[]="Press key '1' to go to next scene";
+char next_scene11[]="Press left arrow to continue..";
+char next_scene2[]="Press key '2' to go to next scene";
+char next_scene22[]="Press right arrow to continue..";
+char next_scene3[]="Press key '3' to go to next scene";
+char next_scene4[]="Press key '4' to go to next scene";
+char next_scene44[]="Press up arrow to continue..";
+char next_scene5[]="Press key '5' to go to next scene";
+char realize1[]="Yes..";
+char realize2[]="We have to";
+char realize3[]="Clean our";
+char realize4[]="Society";
+char govt[]="Govt.";
+char govt1[]="School";
+
+char a1[]="SAHYADRI COLLEGE OF ENGINEERING AND MANAGEMENT";
+char bb[]="ADYAR";
+char c[]="A MINIPROJECT ON";
+char dd[]="COMPUTER GRAPHICS AND VISUALIZATION";
+char e[]="SWATCH INDIA";
+char f[]="DESIGNED BY:";
+char g[]="RAVIGANESH M";
+char h[]="RATHAN H V";
+char i[]="4SF16CS125";
+char j[]="4SF16CS124";
+char k[]="PRESS KEY '1' TO CONTINUE";
+char after_few_months[]="After Few Months........";
+
+char drinking[]="   Drinking";
+char water[]="    Water";
+char pondd[]="     Pond";
+char empty[]="";
+char q1[]="Wow..It's the";
+char q2[]="real heaven with";
+char q3[]="Green.It's beca-";
+char q4[]="-use of Swatch";
+char q5[]="India Mission";
+char endd[]="END!!";
+
+char thanks[]="Thank You...";
+
+void main(int agrc,char **agrv)
+{
+	glutInit(&agrc,agrv);
+	glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
+	glutInitWindowPosition(0,0);
+	glutInitWindowSize(1300,600);					   
+	glutCreateWindow("Swatch India");
+	init();
+	glutDisplayFunc(display);
+	glutKeyboardFunc(keyEvent);
+	glutSpecialFunc(keyEvent1);
+	glutMainLoop();
+}
+void keyEvent(int key)
+{
+	if(key=='0')
+		scene=0;
+	if(key=='1')
+		scene=1;
+	if(key=='2')
+		scene=2;
+	if(key=='3')
+		scene=3;
+	if(key=='4')
+		scene=4;
+	if(key=='5')
+		scene=5;
+	
+	glutPostRedisplay();
+}
+void keyEvent1(int key)
+{
+	if(scene==1){
+	if( key == GLUT_KEY_LEFT)
+	{
+		if(mov_car<2500)
+			mov_car+=2;
+		else
+			mov_car=0;
+		mov_waste+=2;
+		if(mov_sick_man==0)
+			mov_sick_man=2;
+		else
+			mov_sick_man=0;
+		mov_man_and_waste+=0.3;
+		mov_waste_and_man+=0.3;
+	}}
+	if(scene==2){
+	if(key==GLUT_KEY_RIGHT)
+	{
+		mov_vehicle2+=1;
+		mov_man_throw_waste2+=2;
+	}}
+	if(scene==4){
+	if(key==GLUT_KEY_UP)
+		mov_man4+=1;
+	}
+	glutPostRedisplay();
+}
+void init()
+{
+	glClearColor(.9,.9,.9,1);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0,1200,0,900,0,900);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	
+}
+void display()
+{
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	if(scene==0)
+		intro();
+	if(scene==1){
+	
+	road(next_scene2,next_scene11);
+	
+	pond(0.0,0.3,0.3);
+	board(dont_text,waste_text,the_text);
+	waste();//wastes inside the pond
+	hills();
+	cut_tree();
+	call_cut_tree();	
+	glPushMatrix();
+	glTranslatef(800,570,0);
+	glScalef(1,.5,1);
+	tree();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(780,270,0);
+	glScalef(1,.99,1);
+	tree();
+	glPopMatrix();
+
+	move_man_and_waste();	
+	move_waste_and_man();
+
+	dustbin();
+	call_dustbin();
+
+	
+	home();
+	bench();
+	
+	move_waste();	
+	move_car();
+	move_sick_man();
+
+	//waste_with_man();
+	//display_man_and_waste();
+	 
+	
+	
+
+	//man_throw_waste();//man throwing waste into pond
+	
+	for(l=0;l<=25;l++)		//sun
+	{
+		glColor3f(1.0,0.9,0.0);
+		draw_circle(920,870,l);
+	}
+	
+}
+	if(scene==2){
+		tree_school();
+		school();
+		road2();
+		move_vehicle2();
+		busstand2();
+		move_man_throw_waste2();
+		//man_throw_waste2();
+		//vehicle2();
+		
+	}
+	if(scene==4)
+	{
+		road(next_scene5,next_scene44);
+		pond(0.0,0.9,0.9);
+		board(drinking,water,pondd);
+		hills();
+		for(l=0;l<=25;l++)		//sun
+		{
+			glColor3f(1.0,0.9,0.0);
+			draw_circle(920,870,l);
+		}
+		
+		glPushMatrix();
+		glTranslatef(800,570,0);
+		glScalef(1,.5,1);
+		tree();
+		glPopMatrix();
+
+		draw_tree(780,270);
+		draw_tree(700,200);
+		draw_tree(765,150);
+		draw_tree(750,10);
+		//draw_tree();
+		//draw_tree();
+		paddy_field();
+		
+		dustbin();
+		call_dustbin();
+		home();
+		bench();
+		//move_man_throw_waste2();
+		move_man_scene4();
+		end();
+	}
+	if(scene==3){
+		after_months();
+	}
+	if(scene==5)
+	{
+		thank_you();
+	}	
+	glFlush();
+}
+void road(GLfloat *a,GLfloat *b)
+{
+	glColor3f(0,0,0);
+	glBegin(GL_POLYGON);
+		glVertex2i(0,0);
+		glVertex2i(0,180);
+		glVertex2i(150,180);
+	glEnd();
+
+	glBegin(GL_POLYGON);
+		glVertex2i(0,0);
+		glVertex2i(110,140);
+		glVertex2i(925,140);
+		glVertex2i(1200,30);
+		glVertex2i(1200,0);
+	glEnd();
+
+	road_side_block(1,1,0);
+	call_road_block(0.8,0,0.5,30,0);
+	call_road_block(1,1,0,60,0);
+	call_road_block(0.8,0,0.5,90,0);
+	call_road_block(1,1,0,120,0);
+	glColor3f(1,0,0);
+	write_content(780,03,a,font[1]);
+	write_content(10,03,b,font[1]);
+
+int i,val=90;
+	
+	for(i=0;i<27;i++)
+	{
+		val+=30;
+		if(i%2!=0){x=0.8;y=0;z=0.5;}
+		else {x=1;y=1;z=0;}
+		call_road_block(x,y,z,val,-40);
+	}
+	glColor3f(0.8,0,0.5);
+	glBegin(GL_POLYGON);
+		glVertex2i(150,190);
+		glVertex2i(160,190);
+		glVertex2i(160,180);
+		glVertex2i(124,140);
+		glVertex2i(110,140);
+	glEnd();
+
+	glColor3f(0.8,0,0.5);
+	glBegin(GL_POLYGON);
+		glVertex2i(925,150);
+		glVertex2i(925,140);
+		glVertex2i(1200,30);
+		glVertex2i(1200,40);
+	glEnd();
+
+	glColor3f(1,1,1); //middle white lines of road
+	glBegin(GL_POLYGON);
+	glVertex2i(0,40);glVertex2i(0,50);
+	glVertex2i(100,50);glVertex2i(100,40);
+	glEnd();
+
+	glBegin(GL_POLYGON);//"
+	glVertex2i(250,40);glVertex2i(250,50);
+	glVertex2i(450,50);glVertex2i(450,40);
+	glEnd();
+
+	glBegin(GL_POLYGON);//"
+	glVertex2i(600,40);glVertex2i(600,50);
+	glVertex2i(800,50);glVertex2i(800,40);
+	glEnd();
+
+	glBegin(GL_POLYGON);//"
+	glVertex2i(950,40);glVertex2i(950,50);
+	glVertex2i(1150,10);glVertex2i(1150,0);
+	glEnd();
+		
+}
+void road_side_block(float a,float b,float c)//road's side block,yellow and pink
+{
+	glColor3f(a,b,c);
+	glBegin(GL_POLYGON);
+		glVertex2i(0,180);
+		glVertex2i(0,190);
+		glVertex2i(30,190);
+		glVertex2i(30,180);
+	glEnd();
+}
+void call_road_block(float a,float b,float c,float k,float l)//to call the road_side_block method by continuous push-pop and translate it
+{
+	glPushMatrix();
+	glTranslatef(k,l,0);
+	road_side_block(a,b,c);
+	glPopMatrix();
+}
+void dustbin()
+{
+	glColor3f(0,0.4,0);
+	glBegin(GL_POLYGON);
+	glVertex2i(80,190);glVertex2i(65,325);
+        glVertex2i(160,325);glVertex2i(140,190);
+	glEnd();
+
+	glColor3f(0.5,0,0);
+	glBegin(GL_POLYGON);
+	glVertex2i(65,325);glVertex2i(69,340);
+        glVertex2i(156,340);glVertex2i(160,325);
+	glEnd();
+	
+	glColor3f(0.8,0.8,0.8);
+	write_content(73,280,use_me,font[3]);			//write content
+	write_content1(81,217,dustbn,font[6]);
+
+	
+}
+void call_dustbin()//right side dustbin
+{
+	glPushMatrix();
+	glTranslatef(770,-40,0);
+	dustbin();
+	glPopMatrix();
+}
+void write_content(float a,float b,char *aa,char font)
+{
+	int i;
+	glRasterPos2f(a,b);
+	for(i=0;aa[i]!='\0';i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,aa[i]);
+}
+void write_content1(float a,float b,char *aa,char font)
+{
+	int i;
+	glRasterPos2f(a,b);
+	for(i=0;aa[i]!='\0';i++)
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,aa[i]);
+}
+void write_content3(float a,float b,char *aa,char font)
+{
+	int i;
+	glRasterPos2f(a,b);
+	for(i=0;aa[i]!='\0';i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10,aa[i]);
+}
+void hills()
+{
+	glColor3f(0.8,.8,0.8);//sky
+	glBegin(GL_POLYGON);
+	glVertex2i(0,810);
+	glVertex2i(0,900);
+        glVertex2i(1200,900);
+        glVertex2i(1200,810);
+	glEnd();
+
+	glColor3f(0,.4,0);
+	glBegin(GL_POLYGON);
+	glVertex2i(0,810);
+	glVertex2i(250,890);
+        glVertex2i(440,810);
+	glEnd();
+
+	glColor3f(0,.4,0);
+	glBegin(GL_POLYGON);
+	glVertex2i(350,810);
+	glVertex2i(700,890);
+        glVertex2i(960,810);
+	glEnd();
+
+	glColor3f(0,.4,0);
+	glBegin(GL_POLYGON);
+	glVertex2i(925,810);
+	glVertex2i(1070,895);
+        glVertex2i(1200,810);
+	glEnd();
+}
+void circle()
+{
+	int i;
+	for(i=1;i<=360;i++)
+	{
+		plot(400+80*cos(i),770+80*sin(i));
+	}
+}
+void plot(float x,float y)
+{
+	glColor3f(1,0.5,0);
+		glBegin(GL_POINTS);
+		glVertex2f(x,y);
+		glEnd();
+}
+void home()
+{
+	glColor3f(0.1,0.5,0.1);
+	glBegin(GL_POLYGON);//foundation(base)
+		glVertex2f(660,520);//
+		glVertex2f(520,430);//
+		glVertex2f(310,430);//
+		glVertex2f(490,550);//
+	glEnd();
+	glColor3f(0.8,0.4,0);
+	glBegin(GL_POLYGON);//home square
+		glVertex2f(375,550);//j
+		glVertex2f(500,550);//i
+		glVertex2f(500,450);//b
+		glVertex2f(375,450);//a
+	glEnd();
+	glColor3f(0,0.2,0.7);
+	glBegin(GL_TRIANGLES);//home roof
+		glVertex2f(375,550);//j
+		glVertex2f(437.5,625);//g
+		glVertex2f(500,550);//h
+	glEnd();
+	glLineWidth(5);//extended roof
+	glColor3f(0,0.2,0.7);
+	glBegin(GL_LINES);
+		glVertex2f(378,550);
+		glVertex2f(360,520);
+	glEnd();
+	glColor3f(0.9,0.6,0);
+	glBegin(GL_POLYGON);//home rectangle
+		glVertex2f(625,565);//e
+		glVertex2f(625,520);//c
+		glVertex2f(500,450);//b
+		glVertex2f(500,550);//i
+	glEnd();
+	glColor3f(0,0.4,0.8);
+	glBegin(GL_POLYGON);//roof
+		glVertex2f(437.5,625);//g
+		glVertex2f(610,610);//f
+		glVertex2f(650,570);//e
+		glVertex2f(510,530);//h
+	glEnd();
+	glColor3f(1,1,1);
+	glBegin(GL_POLYGON);		//door frame 
+		glVertex2f(425,525);//l
+		glVertex2f(450,525);//m
+		glVertex2f(450,453);//n
+		glVertex2f(425,453);//o
+	glEnd();
+	glColor3f(0,0,0);
+	  glBegin(GL_POLYGON);		//door
+		glVertex2f(425,525);//l
+		glVertex2f(445,515);//p
+		glVertex2f(445,453);//q
+		glVertex2f(425,453);//o
+	glEnd();
+	glColor3f(1,1,1);
+	  glBegin(GL_POLYGON);		//door lock
+		glVertex2f(435,480);//l
+		glVertex2f(434,478);//p
+		glVertex2f(437,476);//q
+		glVertex2f(440,470);//o
+		glVertex2f(442,477);
+	glEnd();
+	glColor3f(1,1,1);
+	  glBegin(GL_POLYGON);//window
+		glVertex2f(545,525);//r
+		glVertex2f(580,535);//s
+		glVertex2f(580,515);//t
+		glVertex2f(545,500);//u
+	glEnd();
+}
+void sick_man()//man sleeping on bench near the house
+{
+	glColor3f(0,0,0);
+	glLineWidth(2);
+	  glBegin(GL_LINE_LOOP);	//man's head
+		glVertex2f(705,640);
+		glVertex2f(719,638);
+		glVertex2f(730,650);
+		glVertex2f(733,640);
+		glVertex2f(744,640);
+		glVertex2f(748,630);
+		glVertex2f(752,640);
+		glVertex2f(765,640);
+
+		glVertex2f(765,598);
+		glVertex2f(762,590);
+		glVertex2f(720,590);
+		glVertex2f(705,609);
+	glEnd();
+	glPointSize(4);//eye
+	glBegin(GL_POINTS);
+		glVertex2i(720,625);
+	glEnd();
+	glBegin(GL_LINES);	//ear
+		glVertex2f(725,610);
+		glVertex2f(725,603);
+		glVertex2f(725,603);
+		glVertex2f(745,603);
+		glVertex2f(745,603);
+		glVertex2f(745,610);
+	glEnd();
+	glColor3f(0.8,0.5,0);
+	  glBegin(GL_POLYGON);	//neck
+		glVertex2f(765,598);
+		glVertex2f(765,615);
+		glVertex2f(780,615);
+		glVertex2f(780,598);
+	glEnd();
+	glColor3f(0.8,0.2,0.8);
+	  glBegin(GL_POLYGON);	//shirt
+		glVertex2f(780,650);
+		glVertex2f(880,650);
+		glVertex2f(880,590);
+		glVertex2f(780,590);
+	glEnd();
+	glColor3f(0,0,0);
+	glBegin(GL_LINES);	//shirt hand
+		glVertex2f(784,615);
+		glVertex2f(810,615);
+		glVertex2f(810,615);
+		glVertex2f(810,600);
+		glVertex2f(810,600);
+		glVertex2f(784,600);
+	glEnd();
+	glColor3f(0.8,0.8,0.8);
+	  glBegin(GL_POLYGON);	//pant
+		glVertex2f(880,650);
+		glVertex2f(950,625);
+		glVertex2f(950,590);
+		glVertex2f(880,590);
+	glEnd();
+	glColor3f(0.8,0.5,0.5);
+	  glBegin(GL_POLYGON);	//hand
+		glVertex2f(810,614);
+		glVertex2f(910,615);
+		glVertex2f(908,608);
+		glVertex2f(810,604);
+	glEnd();
+	glColor3f(0.8,0.5,0);
+	  glBegin(GL_POLYGON);	//leg
+		glVertex2f(950,605);
+		glVertex2f(960,605);
+		glVertex2f(960,590);
+		glVertex2f(950,590);
+	glEnd();
+	glColor3f(0.8,0.5,0);
+	  glBegin(GL_POLYGON);	//foot
+		glVertex2f(965,630);
+		glVertex2f(969,630);
+		glVertex2f(969,590);
+		glVertex2f(958,590);
+	glEnd();
+	
+	
+}
+void move_sick_man()
+{
+	glPushMatrix();
+	glTranslatef(0,mov_sick_man,0);
+	glTranslatef(-47,235,0);
+	glScalef(.4,.4,9);
+	sick_man();
+	glPopMatrix();
+}
+void bench()
+{
+	glColor3f(.6,0,0.2);
+	  glBegin(GL_POLYGON);//bencg bed
+		glVertex2f(225,470);
+		glVertex2f(350,470);
+		glVertex2f(350,460);
+		glVertex2f(225,460);
+	glEnd();
+	glColor3f(0,0,0);
+	  glBegin(GL_POLYGON);	//leg1
+		glVertex2f(230,420);
+		glVertex2f(250,420);
+		glVertex2f(250,460);
+		glVertex2f(230,460);
+	glEnd();
+	glColor3f(0,0,0);
+	  glBegin(GL_POLYGON);	//leg2
+		glVertex2f(325,460);
+		glVertex2f(325,420);
+		glVertex2f(345,420);
+		glVertex2f(345,460);
+	glEnd();
+	if(scene==1){
+	int l;
+	for(l=0;l<=40;l++)//dialogue box for "Iam sick"
+	{
+		glColor3f(0.4,0.8,0.8);
+		draw_circle(250,590,l);
+	}
+	glColor3f(0,0,0);
+	write_content1(215,580,iam_sick,font[6]);
+	glColor3f(0.4,0.8,0.8);//dialog box pointer
+	glBegin(GL_POLYGON);
+		glVertex2i(237,550);
+		glVertex2i(260,550);
+		glVertex2i(254,500);
+	glEnd();}
+}
+void drawcircle(int a,int b)//to draw tires
+{
+	int i;
+	float x,y;
+	for(i=0;i<361;i++)
+	{
+		x=cos(i);
+		y=sin(i);
+		glPointSize(8);
+		glColor3f(.7,.7,.7);
+		glBegin(GL_POINTS);
+		glVertex2f(21*x+a,21*y+b);
+		glEnd();
+	}
+}
+void man_in_car()
+{
+	int j=-475;
+	glLineWidth(2);
+	glColor3f(0,0,0);
+	glBegin(GL_LINES);
+
+	glVertex2i(j+470,200);	glVertex2i(j+470,215);
+
+        glVertex2i(j+470,215);	glVertex2i(j+475,215);
+
+        glVertex2i(j+475,215);	glVertex2i(j+475,221);
+
+        glVertex2i(j+475,221);	glVertex2i(j+471,223);
+
+        glVertex2i(j+471,223);	glVertex2i(j+471,230);
+
+	glVertex2i(j+471,230);	glVertex2i(j+474,236);
+
+        glVertex2i(j+474,236);	glVertex2i(j+480,236);
+
+        glVertex2i(j+480,236);	glVertex2i(j+483,232);
+
+        glVertex2i(j+483,232);	glVertex2i(j+483,227);
+
+        glVertex2i(j+483,227);	glVertex2i(j+485,221);
+
+        glVertex2i(j+485,221);	glVertex2i(j+481,221);
+
+        glVertex2i(j+481,221);	glVertex2i(j+483,223);
+
+        glVertex2i(j+483,223);	glVertex2i(j+480,215);
+	
+	glVertex2i(j+480,215);	glVertex2i(j+495,210);
+
+        glVertex2i(j+495,210);	glVertex2i(j+515,220);
+
+        glVertex2i(j+489,210);	glVertex2i(j+515,200);
+	glEnd();
+
+	//eye
+	glPointSize(3);
+	glBegin(GL_POINTS);
+	glVertex2i(j+479,230);
+	glEnd();
+}
+void waste_in_car()
+{
+	glColor3f(0.1,0.8,.9);
+	glBegin(GL_POLYGON);	//"waste" thrown into pond from car
+		glVertex2f(98,180);
+		glVertex2f(95,138);
+		glVertex2f(130,138);
+		glVertex2f(127,180);
+	glEnd();
+	glColor3f(0,0,0);
+	write_content3(99,160,waste1,font[6]);
+}
+void move_waste()
+{
+	if(mov_waste<600)
+	{
+		glPushMatrix();	
+		glTranslatef(mov_waste,0,0);
+		waste_in_car();
+		glPopMatrix();
+	}
+	else
+	{
+		
+		if(mov_waste-600<50){
+		glPushMatrix();	
+		glTranslatef(600,mov_waste-600,0);		
+		waste_in_car();
+		glPopMatrix();}
+		else{
+			
+			glPushMatrix();	
+			glTranslatef(600,180,0);		
+			waste_in_car();
+			glPopMatrix();
+		}
+	}
+	glutPostRedisplay();
+}
+void man_throw_waste()
+{
+	glColor3f(0,0,0);
+	glBegin(GL_LINE_LOOP);//face
+		glVertex2i(880,600);
+		glVertex2i(890,600);
+		glVertex2i(900,570);
+		glVertex2i(900,540);
+		glVertex2i(890,530);
+		glVertex2i(860,530);
+		glVertex2i(860,540);
+		glVertex2i(875,545);
+		glVertex2i(860,550);
+		glVertex2i(860,555);
+		glVertex2i(850,555);
+		glVertex2i(860,560);
+		glVertex2i(860,580);
+	glEnd();
+	glLineWidth(10);
+	glColor3f(0,0,0);
+	glBegin(GL_LINES);//hair
+		glVertex2i(860,580);
+		glVertex2i(880,600);
+		glVertex2i(880,600);
+		glVertex2i(890,600);
+		glVertex2i(890,600);
+		glVertex2i(900,570);
+	glEnd();
+	glPointSize(4);
+	glBegin(GL_POINTS);//eye
+		glVertex2i(875,570);
+	glEnd();
+	glColor3f(0.8,0.3,0);
+	  glBegin(GL_POLYGON);//neck
+		glVertex2i(875,530);
+		glVertex2i(890,530);
+		glVertex2i(890,518);
+		glVertex2i(875,518);
+	glEnd();
+
+	glColor3f(0.4,0.3,0.9);
+	  glBegin(GL_POLYGON);//shirt
+		glVertex2i(855,518);
+		glVertex2i(895,518);
+		glVertex2i(895,410);
+		glVertex2i(855,410);
+	glEnd();
+	glColor3f(0.4,0.3,0.9);
+	  glBegin(GL_POLYGON);//shirt hand
+		glVertex2i(855,518);
+		glVertex2i(855,490);
+		glVertex2i(835,480);
+		glVertex2i(825,485);
+	glEnd();
+	glColor3f(0.8,0.3,0);
+	  glBegin(GL_POLYGON);//hand
+		glVertex2i(835,480);
+		glVertex2i(800,410);
+		glVertex2i(795,415);
+		glVertex2i(827,488);
+	glEnd();
+	glColor3f(0.3,0.3,0.3);
+	  glBegin(GL_POLYGON);//pant leg1
+		glVertex2i(855,410);
+		glVertex2i(895,410);
+		glVertex2i(850,310);
+		glVertex2i(840,330);
+	glEnd();
+	glColor3f(0.3,0.3,0.3);
+	  glBegin(GL_POLYGON);//pant leg2
+		glVertex2i(855,410);
+		glVertex2i(895,410);
+		glVertex2i(890,310);
+		glVertex2i(880,310);
+	glEnd();
+	glColor3f(0.8,0.3,0);
+	  glBegin(GL_POLYGON);//leg1
+		glVertex2i(850,310);
+		glVertex2i(835,300);
+		glVertex2i(827,310);
+		glVertex2i(845,326);
+	glEnd();
+	glColor3f(0.8,0.3,0);
+	  glBegin(GL_POLYGON);//leg2
+		glVertex2i(885,310);
+		glVertex2i(860,300);
+		glVertex2i(862,310);
+		glVertex2i(880,326);
+	glEnd();
+}
+void man_throw_waste2()
+{
+int i,j;
+	if(scene==2)
+		i=-100;
+	if(scene==4)
+		i=-350;
+	j=-300;
+	glColor3f(0,0,0);
+	glLineWidth(2);
+	glBegin(GL_LINE_LOOP);//face
+		glVertex2i(880+i,600+j);
+		glVertex2i(890+i,600+j);
+		glVertex2i(900+i,570+j);
+		glVertex2i(900+i,540+j);
+		glVertex2i(890+i,530+j);
+		glVertex2i(860+i,530+j);
+		glVertex2i(860+i,540+j);
+		glVertex2i(875+i,545+j);
+		glVertex2i(860+i,550+j);
+		glVertex2i(860+i,555+j);
+		glVertex2i(850+i,555+j);
+		glVertex2i(860+i,560+j);
+		glVertex2i(860+i,580+j);
+	glEnd();
+	glLineWidth(10);
+	glColor3f(0,0,0);
+	glBegin(GL_LINES);//hair
+		glVertex2i(860+i,580+j);
+		glVertex2i(880+i,600+j);
+		glVertex2i(880+i,600+j);
+		glVertex2i(890+i,600+j);
+		glVertex2i(890+i,600+j);
+		glVertex2i(900+i,570+j);
+	glEnd();
+	glPointSize(4);
+	glBegin(GL_POINTS);//eye
+		glVertex2i(875+i,570+j);
+	glEnd();
+	glColor3f(0.8,0.3,0);
+	  glBegin(GL_POLYGON);//neck
+		glVertex2i(875+i,530+j);
+		glVertex2i(890+i,530+j);
+		glVertex2i(890+i,518+j);
+		glVertex2i(875+i,518+j);
+	glEnd();
+
+	glColor3f(0.4,0.3,0.9);
+	  glBegin(GL_POLYGON);//shirt
+		glVertex2i(855+i,518+j);
+		glVertex2i(895+i,518+j);
+		glVertex2i(895+i,410+j);
+		glVertex2i(855+i,410+j);
+	glEnd();
+	glColor3f(0.4,0.3,0.9);
+	  glBegin(GL_POLYGON);//shirt hand
+		glVertex2i(855+i,518+j);
+		glVertex2i(855+i,490+j);
+		glVertex2i(835+i,480+j);
+		glVertex2i(825+i,485+j);
+	glEnd();
+	glColor3f(0.8,0.3,0);
+	  glBegin(GL_POLYGON);//hand
+		glVertex2i(835+i,480+j);
+		glVertex2i(800+i,410+j);
+		glVertex2i(795+i,415+j);
+		glVertex2i(827+i,488+j);
+	glEnd();
+	glColor3f(0.3,0.3,0.3);
+	  glBegin(GL_POLYGON);//pant leg1
+		glVertex2i(855+i,410+j);
+		glVertex2i(895+i,410+j);
+		glVertex2i(850+i,310+j);
+		glVertex2i(840+i,330+j);
+	glEnd();
+	glColor3f(0.3,0.3,0.3);
+	  glBegin(GL_POLYGON);//pant leg2
+		glVertex2i(855+i,410+j);
+		glVertex2i(895+i,410+j);
+		glVertex2i(890+i,310+j);
+		glVertex2i(880+i,310+j);
+	glEnd();
+	glColor3f(0.8,0.3,0);
+	  glBegin(GL_POLYGON);//leg1
+		glVertex2i(850+i,310+j);
+		glVertex2i(835+i,300+j);
+		glVertex2i(827+i,310+j);
+		glVertex2i(845+i,326+j);
+	glEnd();
+	glColor3f(0.8,0.3,0);
+	  glBegin(GL_POLYGON);//leg2
+		glVertex2i(885+i,310+j);
+		glVertex2i(860+i,300+j);
+		glVertex2i(862+i,310+j);
+		glVertex2i(880+i,326+j);
+	glEnd();
+
+	if(scene==2){
+		for(l=0;l<=60;l++)		//dialog box
+		{
+			glColor3f(0,0.9,0.9);
+			draw_circle(730,370,l);
+		}
+		glColor3f(0,0.9,0.9);
+		  glBegin(GL_POLYGON);//dialog box pointer
+			glVertex2i(720,320);
+			glVertex2i(735,260);
+			glVertex2i(730,320);
+		glEnd();
+		glColor3f(1,0,0);
+		write_content1(690,395,realize1,font[1]);
+		write_content1(690,370,realize2,font[1]);
+		write_content1(690,345,realize3,font[1]);
+		write_content1(690,320,realize4,font[1]);
+	}
+	if(scene==4){
+	glColor3f(0.9,0.9,0);
+		glBegin(GL_POLYGON);//dialog box
+			glVertex2f(350,140);
+			glVertex2f(350,270);
+			glVertex2f(480,270);
+			glVertex2f(480,140);
+		glEnd();
+		glBegin(GL_POLYGON);//dialog box pointer
+			glVertex2f(495,250);
+			glVertex2f(480,250);
+			glVertex2f(480,220);
+		glEnd();
+		glColor3f(0,0,0);
+		glLineWidth(3);
+		glBegin(GL_LINE_LOOP);//dialog box outline
+			glVertex2f(350,140);
+			glVertex2f(350,270);
+			glVertex2f(480,270);	
+			glVertex2f(480,250);
+			glVertex2f(495,250);
+			glVertex2f(480,220);
+			glVertex2f(480,140);
+		glEnd();
+		glColor3f(0,0,0);
+		write_content1(353,250,q1,font[1]);
+		write_content1(353,225,q2,font[1]);
+		write_content1(353,200,q3,font[1]);
+		write_content1(353,175,q4,font[1]);
+		write_content1(353,150,q5,font[1]);
+	}
+}
+void move_man_throw_waste2()
+{
+	glPushMatrix();
+	glTranslatef(-mov_man_throw_waste2,0,0);
+	man_throw_waste2();
+	glPopMatrix();
+}
+void waste_with_man()
+{
+	glColor3f(.2,.2,.2);
+	glBegin(GL_POLYGON);	//"waste" printed waste inside pond
+		glVertex2f(775,415);
+		glVertex2f(815,415);
+		glVertex2f(815,360);
+		glVertex2f(775,360);
+	glEnd();
+	glColor3f(1,1,1);
+	write_content3(782,380,waste1,font[6]);
+}
+void display_man_and_waste()
+{
+	glPushMatrix();
+	glTranslatef(520,-290,0);
+	glScalef(.75,.75,0);
+	man_throw_waste();
+	//waste_with_man();
+	glPopMatrix();
+}
+void display_waste_and_man()
+{
+	glPushMatrix();
+	glTranslatef(520,-290,0);
+	glScalef(.75,.75,0);
+	//man_throw_waste();
+	waste_with_man();
+	glPopMatrix();
+}
+void move_man_and_waste()
+{
+	glPushMatrix();
+	glTranslatef(-mov_man_and_waste,a,0);
+	if(mov_man_and_waste<200 && mov_man_and_waste!=0)
+		a+=.4;
+	else
+		a=220;
+	if(mov_man_and_waste>230)
+		mov_man_and_waste=232;
+	display_man_and_waste();
+	//display_waste_and_man();
+	glPopMatrix();
+}
+void move_waste_and_man()
+{
+	glPushMatrix();
+	glTranslatef(-mov_waste_and_man,b,0);
+	if(mov_waste_and_man<200 && mov_waste_and_man!=0)
+		b+=.4;
+	else
+		b=220;
+	if(mov_waste_and_man>230)
+		mov_waste_and_man=232;
+	//display_man_and_waste();
+	display_waste_and_man();
+	glPopMatrix();
+}
+void car()
+{
+	int a=-475;
+	glColor3f(1,0,1);
+	  glBegin(GL_POLYGON);//car
+		glVertex2f(250+a,200);//o
+		glVertex2f(325+a,275);//n
+		glVertex2f(500+a,275);//m
+		glVertex2f(550+a,200);//l
+		glVertex2f(640+a,180);//k
+		glVertex2f(640+a,100);//j
+		glVertex2f(250+a,100);//a
+	glEnd();
+	glColor3f(0.6,0.6,0.6);
+	glBegin(GL_POLYGON);//car window1
+		glVertex2f(270+a,200);//p
+		glVertex2f(330+a,260);//q
+		glVertex2f(400+a,260);//r
+		glVertex2f(400+a,200);//s
+	glEnd();
+	glColor3f(0.6,0.6,0.6);
+	glBegin(GL_POLYGON);//car window2
+		glVertex2f(425+a,260);//u
+		glVertex2f(480+a,260);//v
+		glVertex2f(530+a,200);//w
+		glVertex2f(425+a,200);//t
+	glEnd();
+	glColor3f(0,0,0);
+	  glBegin(GL_POLYGON);//tyre hole1
+		glVertex2f(265+a,100);//b
+		glVertex2f(285+a,150);//c
+		glVertex2f(335+a,150);//d
+		glVertex2f(360+a,100);//e
+	glEnd();
+	glColor3f(0,0,0);
+	  glBegin(GL_POLYGON);//tyre hole2
+		glVertex2f(475+a,100);//f
+		glVertex2f(500+a,150);//g
+		glVertex2f(550+a,150);//h
+		glVertex2f(575+a,100);//i
+	glEnd();
+	drawcircle(310+a,110);//tyre1
+	drawcircle(525+a,110);//tyre2
+	man_in_car();//man in car
+}
+void move_car()
+{
+	int m_car=-70;
+	if(mov_car<850){
+	glPushMatrix();	
+	glTranslatef(mov_car,0,0);
+	car();
+	glPopMatrix();}
+	else{
+		glPushMatrix();
+		glTranslatef(mov_car,m_car,0);
+		car();
+		m_car++;
+		glPopMatrix();
+	}
+}
+
+//pond and wastes 'start'
+void pond(float x,float y,float z)
+{
+	glColor3f(x,y,z);//0.0,0.9,0.9
+	int j=500;
+	glBegin(GL_POLYGON);
+		glVertex2f(25+j,350);	glVertex2f(25+j,375);
+		glVertex2f(50+j,400);	glVertex2f(75+j,410);
+		glVertex2f(100+j,420);	glVertex2f(200+j,420);
+		glVertex2f(225+j,410);	glVertex2f(250+j,405);
+		glVertex2f(275+j,390);	glVertex2f(300+j,375);
+		glVertex2f(310+j,350);	glVertex2f(300+j,320);
+		glVertex2f(275+j,300);	glVertex2f(250+j,295);
+		glVertex2f(225+j,290);	glVertex2f(200+j,285);
+		glVertex2f(175+j,280);	glVertex2f(150+j,280);
+		glVertex2f(125+j,280);	glVertex2f(100+j,290);
+		glVertex2f(75+j,300);	glVertex2f(50+j,310);
+		glEnd();
+	glLineWidth(5);
+	glColor3f(0,0.3,0.3);
+	glBegin(GL_LINE_LOOP);
+		glVertex2f(25+j,350);	glVertex2f(25+j,375);
+		glVertex2f(50+j,400);	glVertex2f(75+j,410);
+		glVertex2f(100+j,420);	glVertex2f(200+j,420);
+		glVertex2f(225+j,410);	glVertex2f(250+j,405);
+		glVertex2f(275+j,390);	glVertex2f(300+j,375);
+		glVertex2f(310+j,350);	glVertex2f(300+j,320);
+		glVertex2f(275+j,300);	glVertex2f(250+j,295);
+		glVertex2f(225+j,290);	glVertex2f(200+j,285);
+		glVertex2f(175+j,280);	glVertex2f(150+j,280);
+		glVertex2f(125+j,280);	glVertex2f(100+j,290);
+		glVertex2f(75+j,300);	glVertex2f(50+j,310);
+		glEnd();
+}
+void board(GLfloat *a,GLfloat *b,GLfloat *c)
+{
+	glColor3f(0.6,.2,0);
+	glBegin(GL_POLYGON);	//"don't throw waste" board's stand
+		glVertex2f(704,415);
+		glVertex2f(704,510);
+		glVertex2f(710,510);
+		glVertex2f(710,415);
+	glEnd();
+	glColor3f(0.2,.2,.2);
+	glBegin(GL_POLYGON);	//"don't throw waste" board
+		glVertex2f(680,445);
+		glVertex2f(680,500);
+		glVertex2f(734,500);
+		glVertex2f(734,445);
+	glEnd();
+	glColor3f(1,1,1);
+	write_content3(684,485,a,font[6]);
+	write_content3(684,470,b,font[6]);
+	write_content3(684,455,c,font[6]);
+}
+void waste()
+{
+	glColor3f(0,0,0.7);
+	glBegin(GL_POLYGON);	//plastic bottel cap
+		glVertex2f(570,330);
+		glVertex2f(570,350);
+		glVertex2f(575,350);
+		glVertex2f(575,330);
+	glEnd();
+	glColor3f(0.7,0.7,0.7);
+	glBegin(GL_POLYGON);	//plastic bottel
+		glVertex2f(575,350);
+		glVertex2f(585,360);
+		glVertex2f(630,360);
+		glVertex2f(640,355);
+		glVertex2f(640,325);
+		glVertex2f(630,320);
+		glVertex2f(585,320);
+		glVertex2f(575,330);
+	glEnd();
+	int i=-270,j=-110;
+	glColor3f(0.7,0.7,0.7);
+	glLineWidth(1);
+	glBegin(GL_LINE_LOOP);	//fish bone
+		glVertex2f(890+i,500+j);	glVertex2f(900+i,510+j);
+		glVertex2f(900+i,502+j);	glVertex2f(905+i,502+j);
+		glVertex2f(908+i,509+j);	glVertex2f(907+i,502+j);
+		glVertex2f(910+i,502+j);	glVertex2f(914+i,509+j);
+		glVertex2f(912+i,502+j);	glVertex2f(916+i,502+j);
+		glVertex2f(920+i,510+j);	glVertex2f(917+i,500+j);
+		glVertex2f(920+i,490+j);	glVertex2f(916+i,498+j);
+		glVertex2f(912+i,498+j);	glVertex2f(914+i,491+j);
+		glVertex2f(910+i,498+j);	glVertex2f(907+i,498+j);
+		glVertex2f(908+i,491+j);	glVertex2f(905+i,498+j);
+		glVertex2f(900+i,498+j);	glVertex2f(900+i,490+j);
+	glEnd();
+
+	carrot_waste();//carrot waste
+	glPushMatrix();//to draw the carrot after scale down
+	glTranslatef(500,-180,0);
+	glRotatef(45,0,0,1);
+	glScalef(.7,.7,0);
+	carrot_waste();
+	glPopMatrix();
+
+	glPushMatrix();//to draw the bone after scale down
+	glTranslatef(520,-150,0);
+	glRotatef(45,0,0,1);
+	glScalef(.7,.7,0);
+	bone();
+	glPopMatrix();
+
+	glColor3f(.9,.9,.9);
+	glBegin(GL_POLYGON);	//"waste" printed waste inside pond
+		glVertex2f(755,355);
+		glVertex2f(750,390);
+		glVertex2f(725,390);
+		glVertex2f(720,355);
+	glEnd();
+	glColor3f(0,0,0);
+	write_content3(725,365,waste1,font[6]);
+	
+}
+void carrot_waste()//carrot waste inside the pond
+{
+	glColor3f(0,0.7,0);
+	glBegin(GL_POLYGON);	//carrot waste green part
+		glVertex2f(700,345);
+		glVertex2f(685,350);
+		glVertex2f(700,355);
+	glEnd();	
+	glColor3f(0,0.7,0);
+	glBegin(GL_POLYGON);	//carrot waste green part
+		glVertex2f(685,340);
+		glVertex2f(700,345);
+		glVertex2f(700,335);
+	glEnd();
+	glColor3f(0.9,0.4,0);
+	glBegin(GL_POLYGON);	//carrot waste orange part
+		glVertex2f(700,355);
+		glVertex2f(710,352);
+		glVertex2f(710,339);
+		glVertex2f(700,335);
+	glEnd();
+}
+void bone()
+{
+	int a=-25,b=80,c=80;
+	glColor3f(0.7,0.7,0.7);
+	glLineWidth(1);
+	glBegin(GL_LINE_LOOP);	//other bone
+		glVertex2f(600+c,420+a);
+		glVertex2f(615+c,435+a);
+		glVertex2f(619+c,425+a);
+		glVertex2f(623+b,435+a);
+		glVertex2f(638+b,420+a);
+		glVertex2f(628+b,420+a);
+		glVertex2f(628+b,360);
+		glVertex2f(638+b,360);
+		glVertex2f(623+b,345);
+		glVertex2f(619+c,355);
+		glVertex2f(615+c,345);
+		glVertex2f(600+c,360);
+		glVertex2f(610+c,360);
+		glVertex2f(610+c,420+a);
+	glEnd();
+}
+
+//pond and waste 'end'
+void cut_tree()
+{
+	glColor3f(0.9,0.2,0);
+	glBegin(GL_POLYGON);	//left half of cut tree
+		glVertex2f(1130,550);
+		glVertex2f(1145,538);
+		glVertex2f(1145,500);
+		glVertex2f(1130,500);
+	glEnd();
+	glBegin(GL_POLYGON);//right half of cut tree
+		glVertex2f(1145,538);
+		glVertex2f(1160,550);
+		glVertex2f(1160,500);
+		glVertex2f(1145,500);
+	glEnd();
+	glColor3f(0.7,0.2,0);
+	glBegin(GL_POLYGON);//left root
+		glVertex2f(1130,500);
+		glVertex2f(1120,480);
+		glVertex2f(1140,500);
+	glEnd();
+	glBegin(GL_POLYGON);//middle root
+		glVertex2f(1140,500);
+		glVertex2f(1145,480);
+		glVertex2f(1150,500);
+	glEnd();
+	glBegin(GL_POLYGON);//right root
+		glVertex2f(1150,500);
+		glVertex2f(1165,480);
+		glVertex2f(1160,500);
+	glEnd();
+}
+void call_cut_tree()
+{
+	glPushMatrix();
+	glTranslatef(-50,-300,0);
+	glScalef(1,1.5,0);
+	cut_tree();
+	glPopMatrix();
+}
+void tree()//the complete tree
+{
+	glColor3f(0.9,0.2,0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(350,325);
+	glVertex2f(350,395);
+	glVertex2f(365,395);
+	glVertex2f(365,325);
+	glEnd();
+	for(l=0;l<=30;l++)
+	{
+		glColor3f(0.0,0.5,0.0);
+		draw_circle(340,400,l);
+		draw_circle(380,400,l);
+	}
+
+	for(l=0;l<=25;l++)
+	{
+		glColor3f(0.0,0.5,0.0);
+		draw_circle(350,440,l);
+		draw_circle(370,440,l);
+	}
+
+	for(l=0;l<=20;l++)
+	{
+		glColor3f(0.0,0.5,0.0);
+		draw_circle(360,465,l);
+	}
+
+	
+}
+void draw_pixel(GLint cx, GLint cy)
+{
+
+	glBegin(GL_POINTS);
+		glVertex2i(cx,cy);
+	glEnd();
+}
+
+void plotpixels(GLint h,GLint k, GLint x,GLint y)
+{
+	draw_pixel(x+h,y+k);
+	draw_pixel(-x+h,y+k);
+	draw_pixel(x+h,-y+k);
+	draw_pixel(-x+h,-y+k);
+	draw_pixel(y+h,x+k);
+	draw_pixel(-y+h,x+k);
+	draw_pixel(y+h,-x+k);
+	draw_pixel(-y+h,-x+k);
+}
+
+void draw_circle(GLint h, GLint k, GLint r)
+{
+	GLint d=1-r, x=0, y=r;
+	while(y>x)
+	{
+		plotpixels(h,k,x,y);
+		if(d<0) d+=2*x+3;
+		else
+		{
+			d+=2*(x-y)+5;
+			--y;
+		}
+		++x;
+	}
+	plotpixels(h,k,x,y);
+}
+void road2()
+{
+	glColor3f(0.8,0.4,0);
+	glBegin(GL_POLYGON);
+		glVertex2i(1000,900);
+		glVertex2i(1200,900);
+		glVertex2i(1200,750);
+		glVertex2i(500,0);
+		glVertex2i(0,0);
+		glVertex2i(0,200);
+	glEnd();
+	glColor3f(0,0,0);
+	write_content(10,10,next_scene22,font[2]);
+	glColor3f(1,0,0);
+	write_content(900,10,next_scene3,font[2]);
+}
+void busstand2()
+{
+	glColor3f(0.6,0.6,0);
+	 glBegin(GL_POLYGON);//back compound
+		glVertex2i(1000,300);
+		glVertex2i(1000,370);
+		glVertex2i(1150,370);
+		glVertex2i(1150,300);
+	glEnd();
+	glColor3f(0.6,0.6,0.6);
+	 glBegin(GL_POLYGON);	//floor
+		glVertex2i(850,130);
+		glVertex2i(1000,300);
+		glVertex2i(1150,300);
+		glVertex2i(1040,130);
+	glEnd();
+	glColor3f(0.4,0.4,0);//side compound
+	 glBegin(GL_POLYGON);
+		glVertex2i(1150,370);
+		glVertex2i(1150,300);
+		glVertex2i(1050,130);
+		glVertex2i(1050,200);
+	glEnd();
+	glColor3f(0.6,0.6,0);
+	glBegin(GL_POLYGON);//front compound
+		glVertex2i(850,200);
+		glVertex2i(850,130);
+		glVertex2i(1050,130);
+		glVertex2i(1050,200);
+	glEnd();
+	glColor3f(0,0,0);//front pillar
+	glLineWidth(10);
+	glBegin(GL_LINES);
+		glVertex2i(860,200);
+		glVertex2i(860,450);
+	glEnd();
+	glLineWidth(10);//front pillar
+	glBegin(GL_LINES);
+		glVertex2i(1040,200);
+		glVertex2i(1040,400);
+	glEnd();
+	glColor3f(0,0,0);//back pillar
+	glLineWidth(10);
+	glBegin(GL_LINES);
+		glVertex2i(1010,370);
+		glVertex2i(1010,420);
+	glEnd();
+	glLineWidth(10);//back pillar
+	glBegin(GL_LINES);
+		glVertex2i(1140,370);
+		glVertex2i(1140,480);
+	glEnd();
+	glColor3f(0.6,0.1,0.8);
+	glBegin(GL_POLYGON);	//roof
+		glVertex2i(840,450);
+		glVertex2i(990,540);
+		glVertex2i(1150,480);
+		glVertex2i(1065,387);
+	glEnd();
+	glColor3f(.8,0,0);
+	write_content(890,150,stick_no,font[6]);
+}
+/*glColor3f(0.6,0.6,0.6);
+	 glBegin(GL_POLYGON);
+		glVertex2i();
+		glVertex2i();
+		glVertex2i();
+		glVertex2i();
+	glEnd();*/
+void vehicle2()
+{
+	glColor3f(0.9,0.9,0);
+	 glBegin(GL_POLYGON);
+		glVertex2i(805,620);
+		glVertex2i(805,670);
+		glVertex2i(945,650);
+		glVertex2i(945,600);
+	glEnd();
+	glLineWidth(3);
+	glColor3f(0,0,0);
+	 glBegin(GL_LINE_LOOP); 	//black line box in yellow part
+		glVertex2i(840,625);
+		glVertex2i(840,655);
+		glVertex2i(900,645);
+		glVertex2i(900,615);
+	glEnd();
+	glColor3f(0,0,.8);
+	 glBegin(GL_POLYGON); 	//light in yellow part
+		glVertex2i(810,630);
+		glVertex2i(810,660);
+		glVertex2i(830,650);
+		glVertex2i(830,620);
+	glEnd();
+	glColor3f(0,0,.8);
+	 glBegin(GL_POLYGON); 	//light in yellow part
+		glVertex2i(915,610);
+		glVertex2i(915,640);
+		glVertex2i(935,645);
+		glVertex2i(935,615);
+	glEnd();
+	glColor3f(0,0,0);
+	 glBegin(GL_POLYGON);	//front left tyre
+		glVertex2i(810,620);
+		glVertex2i(810,590);
+		glVertex2i(818,585);
+		glVertex2i(830,590);
+		glVertex2i(833,618);
+	glEnd();
+int j=105,i=-15;
+	glBegin(GL_POLYGON);	//front right tyre
+		glVertex2i(810+j,620+i);
+		glVertex2i(810+j,590+i);
+		glVertex2i(818+j,585+i);
+		glVertex2i(830+j,590+i);
+		glVertex2i(833+j,618+i);
+	glEnd();
+	glColor3f(1,0,0);
+	 glBegin(GL_POLYGON);//bonet
+		glVertex2i(805,670);
+		glVertex2i(945,650);
+		glVertex2i(990,690);
+		glVertex2i(840,710);
+	glEnd();
+	glColor3f(0.6,0.6,0.6);//mirror
+	 glBegin(GL_POLYGON);
+		glVertex2i(840,710);
+		glVertex2i(990,690);
+		glVertex2i(990,755);
+		glVertex2i(840,760);
+	glEnd();
+	glLineWidth(4);
+	glColor3f(0,0,0);//mirror border
+	 glBegin(GL_LINE_LOOP);
+		glVertex2i(840,710);
+		glVertex2i(990,690);
+		glVertex2i(990,755);
+		glVertex2i(840,760);
+	glEnd();
+	glLineWidth(2);
+	glColor3f(0,0,0);//two black lines in mirror
+	 glBegin(GL_LINES);
+		glVertex2i(910,700);
+		glVertex2i(910,760);
+		glVertex2i(915,700);
+		glVertex2i(915,760);
+	glEnd();
+	glLineWidth(2);
+	glColor3f(0,0,0);//wiper
+	 glBegin(GL_LINES);
+	 	glVertex2i(900,758);
+	 	glVertex2i(855,736);
+	 	glVertex2i(863,740);
+	 	glVertex2i(885,725);
+	 glEnd();
+	glColor3f(0.9,0,0.2);
+	 glBegin(GL_POLYGON);
+		glVertex2i(840,760);
+		glVertex2i(990,755);
+		glVertex2i(1110,840);
+		glVertex2i(960,840);
+	glEnd();
+	glColor3f(0.7,0,0.2);
+	 glBegin(GL_POLYGON);
+		glVertex2i(1110,840);
+		glVertex2i(1110,715);
+		glVertex2i(990,625);
+		glVertex2i(990,755);
+	glEnd();
+	glColor3f(0,0,0);
+	 glBegin(GL_POLYGON);
+		glVertex2i(990,690);
+		glVertex2i(990,625);
+		glVertex2i(945,600);
+		glVertex2i(945,650);
+	glEnd();
+	for(l=0;l<=18;l++)		//sun
+	{
+		glColor3f(0,0,0);
+		draw_circle(1083,682,l);
+	}
+	glColor3f(.6,0,.2);
+	glBegin(GL_POLYGON);//tyre white
+		glVertex2i(1060,672);
+		glVertex2i(1070,705);
+		glVertex2i(1094,717);
+		glVertex2i(1105,700);
+	glEnd();
+	glBegin(GL_POLYGON);
+		glVertex2i(1060,672);
+		glVertex2i(1075,707);
+		glVertex2i(1094,717);
+		glVertex2i(1105,697);
+	glEnd();
+	glLineWidth(6);
+	glColor3f(0,0,0);//board stand1
+	glBegin(GL_LINES);
+	 	glVertex2i(860,760);
+		glVertex2i(860,790);
+	glEnd();
+	glColor3f(0,0,0);//board stand2
+	glBegin(GL_LINES);
+	 	glVertex2i(970,755);
+		glVertex2i(970,790);
+	glEnd();
+	glColor3f(0.6,0,0.6);//board
+	 glBegin(GL_POLYGON);
+		glVertex2i(840,790);
+		glVertex2i(840,890);
+		glVertex2i(1010,890);
+		glVertex2i(1010,790);
+	glEnd();
+	glColor3f(1,1,1);
+	write_content1(842,860,clean,font[3]);
+	write_content1(844,820,clean1,font[3]);
+}
+void move_vehicle2()
+{
+	glPushMatrix();
+	glTranslatef(-mov_vehicle2,-mov_vehicle2,0);
+	vehicle2();
+	glPopMatrix();
+}
+void school()
+{
+	glColor3f(0.8,0,0.1);//compound1
+	 glBegin(GL_POLYGON);
+		glVertex2i(0,200);
+		glVertex2i(0,350);
+		glVertex2i(450,665);
+		glVertex2i(450,515);
+	glEnd();
+	glColor3f(1,1,0);//school board
+	 glBegin(GL_POLYGON);
+	 	glVertex2i(90,510);
+		glVertex2i(90,410);
+		glVertex2i(190,475);
+		glVertex2i(190,575);
+	glEnd();
+	glColor3f(1,0,0);
+	write_content(115,500,govt,font[1]);
+	write_content(110,470,govt1,font[1]);
+	glLineWidth(10);
+	glColor3f(0,0,0);//compound1 black border
+	 glBegin(GL_LINE_LOOP);
+		glVertex2i(0,200);
+		glVertex2i(0,350);
+		glVertex2i(450,665);
+		glVertex2i(450,515);
+	glEnd();
+	glColor3f(0.8,0,0.1);//compound2
+	 glBegin(GL_POLYGON);
+	 	glVertex2i(1000,895);
+		glVertex2i(1000,1000);
+		glVertex2i(530,700);
+		glVertex2i(530,573);
+	glEnd();
+	glLineWidth(10);
+	glColor3f(0,0,0);//compound2 black border
+	 glBegin(GL_LINE_LOOP);
+	 	glVertex2i(1000,895);
+		glVertex2i(1000,1005);
+		glVertex2i(530,700);
+		glVertex2i(530,573);
+	glEnd();
+	
+int i=-260,j=230;
+	//school  starts here
+	//house
+	glColor3f(0.1,0.5,0.1);
+	glBegin(GL_POLYGON);//foundation(base)
+		glVertex2f(660+i,520+j);//
+		glVertex2f(520+i,430+j);//
+		glVertex2f(310+i,430+j);//
+		glVertex2f(490+i,550+j);//
+	glEnd();
+	glColor3f(0.8,0.8,0);
+	glBegin(GL_POLYGON);//home square
+		glVertex2f(375+i,550+j);//j
+		glVertex2f(500+i,550+j);//i
+		glVertex2f(500+i,450+j);//b
+		glVertex2f(375+i,450+j);//a
+	glEnd();
+	glColor3f(0,0.2,0.7);
+	glBegin(GL_TRIANGLES);//home roof
+		glVertex2f(375+i,550+j);//j
+		glVertex2f(437.5+i,625+j);//g
+		glVertex2f(500+i,550+j);//h
+	glEnd();
+	glLineWidth(5);//extended roof
+	glColor3f(0,0.2,0.7);
+	glBegin(GL_LINES);
+		glVertex2f(378+i,550+j);
+		glVertex2f(360+i,520+j);
+	glEnd();
+	glColor3f(0.6,0.6,0);
+	glBegin(GL_POLYGON);//home rectangle
+		glVertex2f(625+i,565+j);//e
+		glVertex2f(625+i,520+j);//c
+		glVertex2f(500+i,450+j);//b
+		glVertex2f(500+i,550+j);//i
+	glEnd();
+	glColor3f(0,0.4,0.8);
+	glBegin(GL_POLYGON);//roof
+		glVertex2f(437.5+i,625+j);//g
+		glVertex2f(610+i,610+j);//f
+		glVertex2f(650+i,570+j);//e
+		glVertex2f(510+i,530+j);//h
+	glEnd();
+	glColor3f(1,1,1);
+	glBegin(GL_POLYGON);		//door frame 
+		glVertex2f(425+i,525+j);//l
+		glVertex2f(450+i,525+j);//m
+		glVertex2f(450+i,453+j);//n
+		glVertex2f(425+i,453+j);//o
+	glEnd();
+	glColor3f(0,0,0);
+	  glBegin(GL_POLYGON);		//door
+		glVertex2f(425+i,525+j);//l
+		glVertex2f(445+i,515+j);//p
+		glVertex2f(445+i,453+j);//q
+		glVertex2f(425+i,453+j);//o
+	glEnd();
+	glColor3f(1,1,1);
+	  glBegin(GL_POLYGON);		//door lock
+		glVertex2f(435+i,480+j);//l
+		glVertex2f(434+i,478+j);//p
+		glVertex2f(437+i,476+j);//q
+		glVertex2f(440+i,470+j);//o
+		glVertex2f(442+i,477+j);
+	glEnd();
+	glColor3f(1,1,1);
+	  glBegin(GL_POLYGON);//window
+		glVertex2f(545+i,525+j);//r
+		glVertex2f(580+i,535+j);//s
+		glVertex2f(580+i,515+j);//t
+		glVertex2f(545+i,500+j);//u
+	glEnd();
+	
+}
+void tree_school()//the complete tree
+{
+int i=100,j=400;
+	glColor3f(0.9,0.2,0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(350+i,325+j);
+	glVertex2f(350+i,395+j);
+	glVertex2f(365+i,395+j);
+	glVertex2f(365+i,325+j);
+	glEnd();
+	for(l=0;l<=30;l++)
+	{
+		glColor3f(0.0,0.5,0.0);
+		draw_circle(340+i,400+j,l);
+		draw_circle(380+i,400+j,l);
+	}
+
+	for(l=0;l<=25;l++)
+	{
+		glColor3f(0.0,0.5,0.0);
+		draw_circle(350+i,440+j,l);
+		draw_circle(370+i,440+j,l);
+	}
+
+	for(l=0;l<=20;l++)
+	{
+		glColor3f(0.0,0.5,0.0);
+		draw_circle(360+i,465+j,l);
+	}	
+}
+void intro()
+{
+int ii=70;
+	glColor3f(1,0,0);
+	//write_content(230,1000
+	glRasterPos2f(230+ii,840);
+	for(xx=0;a1[xx]!='\0';xx++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,a1[xx]);	
+	glRasterPos2f(500+ii,800);
+	for(xx=0;bb[xx]!='\0';xx++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,bb[xx]);	
+	glRasterPos2f(230+ii,660);
+		for(xx=0;c[xx]!='\0';xx++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,c[xx]);
+	glRasterPos2f(230+ii,610);
+		for(xx=0;dd[xx]!='\0';xx++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,dd[xx]);
+	glRasterPos2f(430+ii,430);
+		for(xx=0;e[xx]!='\0';xx++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,e[xx]);
+	glRasterPos2f(230+ii,230);
+		for(xx=0;f[xx]!='\0';xx++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,f[xx]);
+	glRasterPos2f(230+ii,150);
+		for(xx=0;g[xx]!='\0';xx++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,g[xx]);
+	glRasterPos2f(230+ii,90);
+		for(xx=0;h[xx]!='\0';xx++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,h[xx]);
+	glRasterPos2f(540+ii,150);
+		for(xx=0;i[xx]!='\0';xx++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,i[xx]);
+	glRasterPos2f(540+ii,90);
+		for(xx=0;j[xx]!='\0';xx++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,j[xx]);
+	glRasterPos2f(340+ii,30);
+		for(xx=0;k[xx]!='\0';xx++)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,k[xx]);
+	glColor3f(0,0,0);
+	glLineWidth(6);
+	glBegin(GL_LINE_LOOP);
+		glVertex2f(200+ii,03);
+		glVertex2f(200+ii,894);
+		glVertex2f(880+ii,894);
+		glVertex2f(880+ii,03);
+	glEnd();		
+}
+void thank_you()
+{
+	glColor3f(1,0,0);
+	write_content(500,450,thanks,font[1]);
+	//glRasterPos2f(500,450);
+		//for(xx=0;thanks[xx]!='\0';xx++)
+			//glutBitmapCharacter(GLUT_HELVETICA_10,thanks[xx]);
+}
+void after_months()
+{
+	glColor3f(1,0,0);
+	write_content(500,450,after_few_months,font[1]);
+	write_content(850,20,next_scene4,font[1]);
+}
+void paddy_field()
+{
+int i=70;
+	glColor3f(0,0.9,0);
+	glBegin(GL_POLYGON);//field1
+		glVertex2f(30+i,500);
+		glVertex2f(200+i,600);
+		glVertex2f(350+i,600);
+		glVertex2f(180+i,500);
+	glEnd();
+	glColor3f(0.4,0,0);
+	glLineWidth(5);//field1 border
+	glBegin(GL_LINE_LOOP);
+		glVertex2f(30+i,500);
+		glVertex2f(200+i,600);
+		glVertex2f(350+i,600);
+		glVertex2f(180+i,500);
+	glEnd();
+	glColor3f(0,0.9,0);
+	glBegin(GL_POLYGON);//field2
+		glVertex2f(30+i,500);
+		glVertex2f(200+i,600);
+		glVertex2f(50+i,600);
+		glVertex2f(-120+i,500);
+	glEnd();
+	glColor3f(0.4,0,0);
+	glLineWidth(5);//field2 border
+	glBegin(GL_LINE_LOOP);
+		glVertex2f(30+i,500);
+		glVertex2f(200+i,600);
+		glVertex2f(50+i,600);		
+		glVertex2f(-120+i,500);
+	glEnd();
+	glColor3f(0,0.9,0);
+	glBegin(GL_POLYGON);//field3
+		glVertex2f(200+i,600);
+		glVertex2f(50+i,600);
+		glVertex2f(200+i,700);
+		glVertex2f(350+i,700);
+	glEnd();
+	glColor3f(0.4,0,0);
+	glLineWidth(5);
+	glBegin(GL_LINE_LOOP);//field3 border
+		
+		glVertex2f(200+i,600);
+		glVertex2f(50+i,600);
+		glVertex2f(200+i,700);
+		glVertex2f(350+i,700);
+	glEnd();
+	glColor3f(0,0.9,0);
+	glBegin(GL_POLYGON);//field4
+		
+		glVertex2f(200+i,600);
+		glVertex2f(350+i,700);
+		glVertex2f(500+i,700);
+		glVertex2f(350+i,600);
+	glEnd();
+	glColor3f(0.4,0,0);
+	glLineWidth(5);
+	glBegin(GL_LINE_LOOP);;//field4 border
+		
+		glVertex2f(200+i,600);
+		glVertex2f(350+i,700);
+		glVertex2f(500+i,700);
+		glVertex2f(350+i,600);
+	glEnd();
+}
+void draw_tree(int a,int b)
+{
+	glPushMatrix();
+	glTranslatef(a,b,0);
+	glScalef(1,.99,1);
+	tree();
+	glPopMatrix();
+}
+void end()
+{
+int i=1000;
+if(mov_man4>=520){
+	i=200;
+	}
+	glColor3f(1,0.49,0);
+	glBegin(GL_POLYGON);;// "END" field	
+		glVertex2f(200+i,50);
+		glVertex2f(200+i,100);
+		glVertex2f(400+i,100);
+		glVertex2f(400+i,50);
+	glEnd();
+	glColor3f(0,0,0);
+	write_content(275+i,65,endd,font[1]);
+}
+void move_man_scene4()
+{
+	glPushMatrix();
+	glTranslatef(-mov_man4,0,0);
+	man_throw_waste2();
+	glPopMatrix();
+	
+}
